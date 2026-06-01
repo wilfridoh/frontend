@@ -42,16 +42,19 @@
       ],
       "@views/*": [
         "./src/views/*"
-      ]
-    }
-  },
-  "include": [
-    "next.config.mjs",
-    "tailwind.config.js",
-    "**/*.js",
-    "**/*.jsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
-}
+      ],
+      "@services/*": [
+        "./src/services/*"
+      ],
+      }
+    },
+    "include": [
+      "next.config.mjs",
+      "tailwind.config.js",
+      "**/*.js",
+      "**/*.jsx"
+    ],
+    "exclude": [
+      "node_modules"
+    ]
+  }

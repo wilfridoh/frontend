@@ -108,7 +108,7 @@ const LoginV2 = ({ mode }) => {
     console.log(response)
 
     if (response.isSuccess) {
-      localStorage.setItem('accesoToken', response.accesoToken)
+      localStorage.setItem('accessToken', response.accesoToken)
       localStorage.setItem('user', JSON.stringify(response.user))
       router.push('/')
     } else {

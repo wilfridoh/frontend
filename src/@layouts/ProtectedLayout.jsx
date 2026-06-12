@@ -8,7 +8,7 @@ const ProtectedLayout = ({ children }) => {
   const router = useRouter()
 
   useLayoutEffect(() => {
-    const token = localStorage.getItem('accessToken')
+    const token = localStorage.getItem('token')
 
     if (token == null || token === undefined) {
       router.push('/login')

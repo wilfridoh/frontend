@@ -96,7 +96,7 @@ const LoginV2 = ({ mode }) => {
     formState: { errors }
   } = useForm({
     defaultValues: {
-      usermane: '',
+      username: '',
       password: ''
     }
   })
@@ -108,7 +108,7 @@ const LoginV2 = ({ mode }) => {
     console.log(response)
 
     if (response.isSuccess) {
-      localStorage.setItem('accessToken', response.accesoToken)
+      localStorage.setItem('token', response.token)
       localStorage.setItem('user', JSON.stringify(response.user))
       router.push('/')
     } else {

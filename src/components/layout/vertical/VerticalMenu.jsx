@@ -5,7 +5,7 @@ import { useTheme } from '@mui/material/styles'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 // Component Imports
-import { Menu, MenuItem } from '@menu/vertical-menu'
+import { Menu, MenuItem, MenuSection } from '@menu/vertical-menu'
 
 // Hook Imports
 import useVerticalNav from '@menu/hooks/useVerticalNav'
@@ -62,6 +62,20 @@ const VerticalMenu = ({ scrollMenu }) => {
           About
         </MenuItem>
       </Menu>
+      <MenuSection label='Mantenimiento'>
+        <Menu
+          popoutMenuOffset={{ mainAxis: 23 }}
+          menuItemStyles={menuItemStyles(verticalNavOptions, theme)}
+          renderExpandIcon={({ open }) => <RenderExpandIcon open={open} transitionDuration={transitionDuration} />}
+          renderExpandedMenuItemIcon={{ icon: <i className='tabler-users-circle' /> }}
+          menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
+        >
+          <MenuItem href='/users' icon={<i className='tabler-smart-home' />}>
+            Usuarios
+          </MenuItem>
+
+        </Menu>
+      </MenuSection>
       {/* <Menu
           popoutMenuOffset={{ mainAxis: 23 }}
           menuItemStyles={menuItemStyles(verticalNavOptions, theme)}

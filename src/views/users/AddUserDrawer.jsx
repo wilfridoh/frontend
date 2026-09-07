@@ -4,6 +4,7 @@ import { Controller, useForm } from 'react-hook-form'
 import CustomTextField from '@/@core/components/mui/TextField'
 import { saveUser } from '@/services/users.service'
 import { Notify } from '@/utils/notification'
+import { useEffect } from 'react'
 
 export default function AddUserDrawer(props) {
   const { open, handleClose, titleForm, userFormData, setReload, reload } = props
@@ -22,6 +23,15 @@ export default function AddUserDrawer(props) {
       role: '1'
     }
   })
+
+  useEffect(() => {
+    resetForm({
+      names: userFormData.names || '',
+      lastNames: userFormData.lastNames || '',
+      username: userFormData.username || '',
+      role: userFormData.role || '1'
+    })
+  }, [userFormData, resetForm])
 
   const onSubmit = async data => {
     const newUser = {

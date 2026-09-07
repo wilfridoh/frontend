@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+
 import { Avatar, Button, Card, CardHeader, IconButton, MenuItem, TablePagination, Typography } from '@mui/material'
 import {
   createColumnHelper,
@@ -65,9 +66,9 @@ export default function UserListTable({ usersData = [], setReload, reload = fals
       columnHelper.display({
         id: 'action',
         header: 'Acciones',
-        cell: () => (
+        cell: ({ row }) => (
           <div className='flex items-center'>
-            <IconButton title='Editar'>
+            <IconButton title='Editar' onClick={() => openEditForm(row)}>
               <i className='tabler-pencil' />
             </IconButton>
             <IconButton title='Eliminar'>
@@ -87,6 +88,12 @@ export default function UserListTable({ usersData = [], setReload, reload = fals
     initialState: { pagination: { pageSize: 10 } },
     getPaginationRowModel: getPaginationRowModel()
   })
+
+  const openEditForm = row => {
+    setUserFormData(row.original)
+    setTitleForm('Edit User')
+    setAddUserOpen(true)
+  }
 
   return (
     <>

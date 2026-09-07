@@ -15,6 +15,8 @@ import CustomTextField from '@/@core/components/mui/TextField'
 import TablePaginationComponent from '@/components/TablePaginationComponent'
 import styles from '@/@core/styles/table.module.css'
 import AddUserDrawer from './AddUserDrawer'
+import { deleteUser } from '@/services/users.service'
+import { Notify } from '@/utils/notification'
 
 const columnHelper = createColumnHelper()
 
@@ -71,7 +73,7 @@ export default function UserListTable({ usersData = [], setReload, reload = fals
             <IconButton title='Editar' onClick={() => openEditForm(row)}>
               <i className='tabler-pencil' />
             </IconButton>
-            <IconButton title='Eliminar'>
+            <IconButton title='Eliminar' onClick={() => handleDelete(row)}>
               <i className='tabler-trash' />
             </IconButton>
           </div>
@@ -93,6 +95,17 @@ export default function UserListTable({ usersData = [], setReload, reload = fals
     setUserFormData(row.original)
     setTitleForm('Edit User')
     setAddUserOpen(true)
+  }
+
+  const handleDelete = async row => {
+    const response = await deleteUser(row.original.id)
+
+    if (response.isSuccess) {
+      setReload(!reload)
+      Notify(response.message, 'Success')
+    } else {
+      Notify(response.message, 'Error')
+    }
   }
 
   return (

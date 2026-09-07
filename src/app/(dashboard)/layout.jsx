@@ -18,6 +18,7 @@ import ScrollToTop from '@core/components/scroll-to-top'
 
 // Util Imports
 import { getMode, getSystemMode } from '@core/utils/serverHelpers'
+import { ToastContainer } from 'react-toastify'
 
 const Layout = async ({ children }) => {
   // Vars
@@ -27,6 +28,7 @@ const Layout = async ({ children }) => {
 
   return (
     <Providers direction={direction}>
+    <ToastContainer />
       <ProtectedLayout>
         <LayoutWrapper
           systemMode={systemMode}

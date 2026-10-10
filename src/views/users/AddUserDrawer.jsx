@@ -1,15 +1,15 @@
+import { useEffect } from 'react'
+
 import { Button, Divider, Drawer, MenuItem, Typography, IconButton } from '@mui/material'
 import { Controller, useForm } from 'react-hook-form'
 
 import CustomTextField from '@/@core/components/mui/TextField'
 import { saveUser } from '@/services/users.service'
 import { Notify } from '@/utils/notification'
-import { useEffect } from 'react'
 
 export default function AddUserDrawer(props) {
   const { open, handleClose, titleForm, userFormData, setReload, reload } = props
 
-  //Hook para
   const {
     control,
     reset: resetForm,
@@ -25,13 +25,15 @@ export default function AddUserDrawer(props) {
   })
 
   useEffect(() => {
-    resetForm({
-      names: userFormData.names || '',
-      lastNames: userFormData.lastNames || '',
-      username: userFormData.username || '',
-      role: userFormData.role || '1'
-    })
-  }, [userFormData, resetForm])
+    if (open) {
+      resetForm({
+        names: userFormData.names ?? '',
+        lastNames: userFormData.lastNames ?? '',
+        username: userFormData.userName ?? userFormData.username ?? '',
+        role: String(userFormData.role ?? '1')
+      })
+    }
+  }, [open, userFormData, resetForm])
 
   const onSubmit = async data => {
     const newUser = {
@@ -49,20 +51,10 @@ export default function AddUserDrawer(props) {
       //setReload(prev => !prev)
       setReload(!reload)
       handleClose()
-      resetForm({ names: '', lastNames: '', username: '', role: '' })
       Notify(response.message, 'Success')
     } else {
       Notify(response.message, 'Error')
     }
-  }
-
-  const handleReset = () => {
-    resetForm({
-      names: '',
-      lastNames: '',
-      username: '',
-      role: ''
-    })
   }
 
   return (
@@ -70,21 +62,12 @@ export default function AddUserDrawer(props) {
       open={open}
       anchor='right'
       variant='temporary'
-      onClose={() => {
-        handleClose()
-        handleReset()
-      }}
+      onClose={handleClose}
       ModalProps={{ keepMounted: true }}
     >
       <div className='flex items-center justify-between plb-5 pli-6'>
         <Typography variant='h5'>{titleForm}</Typography>
-        <IconButton
-          onClick={() => {
-            handleClose()
-            handleReset()
-          }}
-          size='small'
-        >
+        <IconButton onClick={handleClose} size='small'>
           <i className='tabler-x' />
         </IconButton>
       </div>
@@ -163,7 +146,7 @@ export default function AddUserDrawer(props) {
             <Button variant='contained' type='submit'>
               Submit
             </Button>
-            <Button variant='tonal' color='error' type='reset' onClick={() => handleReset()}>
+            <Button variant='tonal' color='error' type='button' onClick={handleClose}>
               Cancel
             </Button>
           </div>

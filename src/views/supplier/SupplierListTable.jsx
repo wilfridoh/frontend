@@ -1,0 +1,150 @@
+'use client'
+import { useMemo, useState } from 'react'
+
+import { Avatar, Button, Card, CardHeader, IconButton, MenuItem, TablePagination, Typography } from '@mui/material'
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable
+} from '@tanstack/react-table'
+
+import CustomTextField from '@/@core/components/mui/TextField'
+import styles from '@core/styles/table.module.css'
+import TablePaginationComponent from '@/components/TablePaginationComponent'
+
+const columnHelper = createColumnHelper()
+
+const getAvatar = ({ avatar }) => {
+  const src = avatar ? `/images/avatar/${avatar}` : '/images/avatar/1.png'
+
+  return <Avatar src={src} sx={{ width: 34, height: 34 }} />
+}
+
+export default function SupplierListTable({ suppliersData, setReload, reload }) {
+  const [data, setData] = useState(() => [...suppliersData])
+  const [addFormOpen, setAddFormOpen] = useState(false)
+  const [formData, setFormData] = useState({})
+  const [titleForm, setTitleForm] = useState('')
+
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor('businessName', {
+        header: 'Negocio',
+        cell: ({ row }) => (
+          <div className='flex items-center gap-4'>
+            {getAvatar({ avatar: row.original.avatar })}
+            <div className='flex flex-col'>
+              <Typography color='text.primary' className='font-medium'>
+                {row.original.businessName}
+              </Typography>
+              <Typography variant='body2'>Doc: {row.original.businessName}</Typography>
+            </div>
+          </div>
+        )
+      }),
+      columnHelper.accessor('adress', {
+        cell: info => info.getValue(),
+        header: 'Dirección'
+      }),
+      columnHelper.accessor('phone', {
+        cell: info => info.getValue(),
+        header: 'Teléfono'
+      }),
+      columnHelper.accessor('contactName', {
+        cell: info => info.getValue(),
+        header: 'Contacto'
+      }),
+      columnHelper.accessor('contactEmail', {
+        cell: info => info.getValue(),
+        header: 'Correo de Contacto'
+      }),
+      columnHelper.display({
+        id: 'action',
+        header: 'Acciones',
+        cell: ({ row }) => (
+          <div className='flex items-center'>
+            <IconButton title='Editar'>
+              <i className='tabler-pencil' />
+            </IconButton>
+            <IconButton title='Eliminar'>
+              <i className='tabler-trash' />
+            </IconButton>
+          </div>
+        )
+      })
+    ],
+    []
+  )
+
+  //hook for react table instance
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    initialState: { pagination: { pageSize: 10 } },
+    getPaginationRowModel: getPaginationRowModel()
+  })
+
+  return (
+    <>
+      <Card>
+        <CardHeader title='Proveedores' />
+
+        <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
+          <CustomTextField
+            select
+            value={table.getState().pagination.pageSize}
+            onChange={e => table.setPageSize(Number(e.target.value))}
+            className='max-sm:is-full sm:is-[70px]'
+          >
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={25}>25</MenuItem>
+            <MenuItem value={50}>50</MenuItem>
+            <MenuItem value={100}>100</MenuItem>
+          </CustomTextField>
+
+          <div className='flex flex-col sm:flex-row max-sm:is-full items-start sm:items-center gap-4'>
+            <Button variant='contained' startIcon={<i className='tabler-plus' />} onClick={() => {}}>
+              Add New Supplier
+            </Button>
+          </div>
+        </div>
+
+        <div className='overflow-x-auto'>
+          <table className={styles.table}>
+            <thead>
+              {table.getHeaderGroups().map(headerGroup => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map(header => (
+                    <th key={header.id}>
+                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map(row => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map(cell => (
+                    <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <TablePagination
+          component={() => <TablePaginationComponent table={table} />}
+          count={table.getFilteredRowModel().rows.length}
+          rowsPerPage={table.getState().pagination.pageSize}
+          page={table.getState().pagination.pageIndex}
+          onPageChange={(_, page) => table.setPageIndex(page)}
+        />
+      </Card>
+    </>
+  )
+}
